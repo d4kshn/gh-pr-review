@@ -1,0 +1,10 @@
+# Local dev/test output
+.devtools/
+.secrev-out/
+tests/e2e/.work/
+__pycache__/
+*.pyc
+node_modules/
+.env
+.env.*
+!.env.example

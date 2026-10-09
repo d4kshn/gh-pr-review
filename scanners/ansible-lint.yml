@@ -1,0 +1,4 @@
+# Central ansible-lint config used by secrev-scan instead of any repo-level config.
+# Everything runs; n8n keeps only the security-relevant rules (see n8n/code/lib/sarif.js).
+offline: true
+use_default_rules: true

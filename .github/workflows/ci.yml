@@ -1,0 +1,26 @@
+# CI for the gmn-secrev repository itself (not the reusable scan).
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+      - name: Generated files are up to date
+        run: python3 scripts/build.py --check
+      - name: Unit and fixture tests
+        run: node --test tests/js/*.test.mjs

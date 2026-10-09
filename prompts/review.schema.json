@@ -1,0 +1,62 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["summary", "risk", "risk_reason", "look_first", "findings", "automated_findings_triage", "injection_suspected"],
+  "properties": {
+    "summary": { "type": "string", "description": "2-3 sentences on what the PR does." },
+    "risk": { "type": "string", "enum": ["clean", "low", "medium", "high", "critical"] },
+    "risk_reason": { "type": "string" },
+    "look_first": {
+      "type": "array",
+      "description": "Up to 3 places a human should check first.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["file", "line", "why"],
+        "properties": {
+          "file": { "type": "string" },
+          "line": { "type": ["integer", "null"] },
+          "why": { "type": "string" }
+        }
+      }
+    },
+    "findings": {
+      "type": "array",
+      "description": "Issues the automated checks missed, at most 8.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["severity", "category", "file", "line", "title", "evidence", "why_it_matters", "fix", "confidence", "related_ids"],
+        "properties": {
+          "severity": { "type": "string", "enum": ["critical", "high", "medium", "low", "info"] },
+          "category": {
+            "type": "string",
+            "enum": ["secrets", "iam-access", "network-exposure", "injection", "tls-crypto", "supply-chain", "data-exposure", "auth", "misconfiguration", "logging", "ci-cd", "n8n-workflow", "prompt-injection", "other"]
+          },
+          "file": { "type": "string" },
+          "line": { "type": ["integer", "null"] },
+          "title": { "type": "string" },
+          "evidence": { "type": "string" },
+          "why_it_matters": { "type": "string" },
+          "fix": { "type": "string" },
+          "confidence": { "type": "string", "enum": ["high", "medium", "low"] },
+          "related_ids": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "automated_findings_triage": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "verdict", "reason"],
+        "properties": {
+          "id": { "type": "string" },
+          "verdict": { "type": "string", "enum": ["confirmed", "false_positive", "not_introduced_by_pr", "needs_human"] },
+          "reason": { "type": "string" }
+        }
+      }
+    },
+    "injection_suspected": { "type": "boolean" }
+  }
+}

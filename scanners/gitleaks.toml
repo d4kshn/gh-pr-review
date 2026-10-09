@@ -1,0 +1,27 @@
+# Central gitleaks config used by secrev-scan. Passing it explicitly means a repo's own
+# .gitleaks.toml cannot weaken the rules for its PRs.
+title = "secrev: gitleaks defaults + GMN extras"
+
+[extend]
+useDefault = true
+
+[[rules]]
+id = "snmp-community-string"
+description = "SNMP community string in plaintext"
+regex = '''(?i)\b(?:snmp[_-]?)?(?:ro[_-]|rw[_-])?community(?:[_-]?string)?\b["']?\s*[:=]\s*["']?([^\s"'#{}$]{4,})'''
+secretGroup = 1
+keywords = ["community"]
+
+[[rules]]
+id = "network-device-plaintext-password"
+description = "Plaintext (type 0/7) password in network device configuration"
+regex = '''(?i)\b(?:enable\s+(?:secret|password)|username\s+\S+\s+(?:secret|password))\s+(?:0\s+|7\s+)?([^\s]{4,})'''
+secretGroup = 1
+keywords = ["enable", "username"]
+
+[[rules]]
+id = "ansible-plaintext-password"
+description = "Plaintext Ansible connection or become password"
+regex = '''\bansible_(?:ssh_|become_)?pass(?:word)?\s*[:=]\s*["']?([^\s"'{}$!][^\s"']{3,})'''
+secretGroup = 1
+keywords = ["ansible_"]

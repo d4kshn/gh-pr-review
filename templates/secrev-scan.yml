@@ -1,0 +1,23 @@
+# secrev-scan caller. Copy to .github/workflows/secrev-scan.yml in each repo you enroll.
+#
+# Replace <org> and <commit-sha>: pin the reusable workflow to a commit of the central
+# gmn-secrev repo. The n8n reviewer reacts only to runs of this exact file path, so keep
+# the filename.
+name: secrev-scan
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+permissions:
+  contents: read
+
+# One scan per PR; a new push cancels the previous run, so bursts of pushes collapse
+# into a single review.
+concurrency:
+  group: secrev-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  scan:
+    uses: <org>/gmn-secrev/.github/workflows/scan.yml@<commit-sha>
